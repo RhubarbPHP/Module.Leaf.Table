@@ -19,10 +19,8 @@
 namespace Rhubarb\Leaf\Table\Leaves;
 
 use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
-use Rhubarb\Leaf\Presenters\Application\Pager\EventPager;
 use Rhubarb\Leaf\Table\Leaves\Columns\SortableColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\Template;
-use Rhubarb\Leaf\Views\JQueryView;
 use Rhubarb\Leaf\Views\View;
 use Rhubarb\Stem\Decorators\DataDecorator;
 

@@ -159,7 +159,7 @@ class Table extends Leaf
 
         $this->view->attachEventHandler("ColumnClicked", function ($index) {
             // Get the inflated columns so we know which one we're dealing with.
-            $columns = $this->inflateColumns($this->Columns);
+            $columns = $this->inflateColumns($this->columns);
             $column = $columns[$index];
 
             if ($column instanceof SortableColumn) {

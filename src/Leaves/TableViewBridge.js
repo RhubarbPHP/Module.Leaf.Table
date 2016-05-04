@@ -1,24 +1,35 @@
 var table = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.ViewBridge.apply(this, arguments);
 };
 
-table.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+table.prototype = new window.rhubarb.viewBridgeClasses.ViewBridge();
 table.prototype.constructor = table;
 
 table.prototype.attachEvents = function () {
     var self = this;
 
-    this.element.find('thead th.sortable').click(function () {
-        var index = $.inArray(this, $('thead th'));
+    var nodes = this.viewNode.querySelectorAll('thead th.sortable');
 
-        self.raiseServerEvent('ColumnClicked', index);
-    });
+    for(var i = 0; i < nodes.length; i++){
+        nodes[i].addEventListener('click', function () {
+            var ths = self.viewNode.querySelectorAll('thead th');
+            var index = ths.indexOf(this);
 
-    this.element.find('tbody tr td.clickable').click(function () {
-        var tr = $(this).parents('tr:first');
+            self.raiseServerEvent('ColumnClicked', index);
+            return false;
+        });
+    }
 
-        self.raiseClientEvent('RowClicked', tr);
-    });
+    nodes = this.viewNode.querySelectorAll('tbody tr td.clickable');
+
+    for(i = 0; i < nodes.length; i++) {
+        nodes[i].addEventListener('click', function () {
+            var tr = self.viewNode.parentNode;
+
+            self.raiseClientEvent('RowClicked', tr);
+            return false;
+        });
+    }
 };
 
 window.rhubarb.viewBridgeClasses.TableViewBridge = table;
