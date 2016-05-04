@@ -1,0 +1,22 @@
+{
+  "name": "rhubarbphp/module-leaf-table",
+  "description": "A table leaf for presenting sortable tabular data.",
+  "keywords": [
+    "mvp",
+    "presenter",
+    "leaf",
+    "rhubarb",
+    "php",
+    "framework"
+  ],
+  "homepage": "http://www.rhubarbphp.com/",
+  "license": "Apache-2.0",
+  "autoload": {
+    "psr-4": {
+      "Rhubarb\\Leaf\\Table\\": "src/"
+    }
+  },
+  "require": {
+    "rhubarbphp/module-leaf": "^1.0.0"
+  }
+}
