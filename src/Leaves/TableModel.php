@@ -83,6 +83,8 @@ class TableModel extends LeafModel
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->getRowCssClassesEvent = new Event();
         $this->getAdditionalClientSideRowData = new Event();
     }

@@ -31,8 +31,6 @@ use Rhubarb\Leaf\Table\Leaves\Columns\SortableColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\TableColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\Template;
 use Rhubarb\Leaf\Table\Leaves\FooterProviders\FooterProvider;
-use Rhubarb\Leaf\Presenters\HtmlPresenter;
-use Rhubarb\Leaf\Presenters\Leaf;
 use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Decorators\DataDecorator;
 use Rhubarb\Stem\Filters\Filter;
@@ -125,7 +123,7 @@ class Table extends Leaf
             $headings
         );
 
-        foreach ($this->collection as $item) {
+        foreach ($this->model->collection as $item) {
             $data = [];
 
             $decorator = DataDecorator::getDecoratorForModel($item);
