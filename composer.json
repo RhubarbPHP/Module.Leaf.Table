@@ -16,6 +16,11 @@
       "Rhubarb\\Leaf\\Table\\": "src/"
     }
   },
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0.0"
+		}
+	},  
   "require": {
     "rhubarbphp/module-leaf": "^1.0.0"
   }
