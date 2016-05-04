@@ -184,7 +184,7 @@ class Table extends Leaf
         $this->model->sortColumn = $columnName;
         $this->model->sortDirection = $currentDirection;
 
-        $this->rePresent();
+        $this->reRender();
     }
 
     protected function applySort()
@@ -348,22 +348,23 @@ class Table extends Leaf
 
     protected function bindEvents(Leaf $leaf)
     {
-        $leaf->attachEventHandler("Search", function () {
-            $this->setSearched();
-            $this->onRefresh();
-        });
+        if (property_exists($leaf, "searchedEvent")) {
+            $leaf->searchedEvent->attachHandler(function () {
+                $this->setSearched();
+                $this->reRender();
+            });
+        }
 
-        $leaf->attachEventHandler("Updated", [$this, "OnRefresh"]);
-    }
-
-    protected function onRefresh()
-    {
-        $this->rePresent();
+        if (property_exists($leaf, "refreshesPageCollectionEvent")) {
+            $leaf->refreshesPageCollectionEvent->attachHandler(function () {
+                $this->reRender();
+            });
+        }
     }
 
     public function setSearched()
     {
-        $this->model->Searched = true;
+        $this->model->searched = true;
     }
 
     public function addTableCssClass($classNames)
@@ -383,6 +384,7 @@ class Table extends Leaf
         parent::beforeRender();
 
         $this->model->columns = $this->inflateColumns($this->columns);
+        $this->configureFilters();
     }
 
     /**
