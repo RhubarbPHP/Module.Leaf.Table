@@ -58,8 +58,8 @@ class TableView extends View
 
     protected function configurePresenters()
     {
-        //$this->presenters["pager"]->setCollection($this->raiseEvent("GetCollection"));
-        //$this->presenters["pager"]->setNumberPerPage($this->pageSize);
+        //$this->leaves["pager"]->setCollection($this->raiseEvent("GetCollection"));
+        //$this->leaves["pager"]->setNumberPerPage($this->pageSize);
     }
 
     public function printViewContent()
@@ -75,8 +75,8 @@ class TableView extends View
         }
 
         //Always print the pager so we get javaScript loading
-        //$this->presenters["pager"]->setSuppressContent($suppressPagerContent);
-        //print $this->presenters["pager"];
+        //$this->leaves["pager"]->setSuppressContent($suppressPagerContent);
+        //print $this->leaves["pager"];
 
         if ($suppressPagerContent) {
             return;
@@ -203,7 +203,7 @@ class TableView extends View
         <?php
 
         if ($this->model->repeatPagerAtBottom) {
-            //$this->presenters["pager"]->displayWithIndex("bottom");
+            //$this->leaves["pager"]->displayWithIndex("bottom");
         }
     }
 
