@@ -18,6 +18,7 @@
 
 namespace Rhubarb\Leaf\Table\Leaves;
 
+use Rhubarb\Crown\Application;
 use Rhubarb\Crown\DataStreams\CsvStream;
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Exceptions\ForceResponseException;
@@ -104,11 +105,13 @@ class Table extends Leaf
     {
         $this->configureFilters();
 
-        if (file_exists("cache/export.csv")) {
-            unlink("cache/export.csv");
+        $cachePath = Application::current()->applicationRootPath."/cache/";
+
+        if (file_exists($cachePath."export.csv")) {
+            unlink($cachePath."export.csv");
         }
 
-        $file = "cache/export.csv";
+        $file = $cachePath."export.csv";
 
         $stream = new CsvStream($file);
 
