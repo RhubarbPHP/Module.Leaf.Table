@@ -1,4 +1,4 @@
-var table = function (presenterPath) {
+var table = function (leafPath) {
     window.rhubarb.viewBridgeClasses.ViewBridge.apply(this, arguments);
 };
 
