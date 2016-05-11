@@ -116,7 +116,7 @@ class Table extends Leaf
 
     public function getCollection()
     {
-        return $this->model->collection;
+        return clone $this->model->collection;
     }
 
     public function exportList()
@@ -356,6 +356,21 @@ class Table extends Leaf
 
     protected function bindEvents(Leaf $leaf)
     {
+        if (property_exists($leaf, "getCollectionEvent")) {
+            // The getCollectionEvent is raised by other Leaves when they need the filtered
+            // collection the table would use to display it's data. This is often used for counting
+            // potential refinements to the list.
+            $leaf->getCollectionEvent->attachHandler(function () {
+
+                $collection = $this->getCollection();
+                $this->getFilterEvent->raise(function (Filter $filter) use ($collection) {
+                    $collection->filter($filter);
+                });
+
+                return $collection;
+            });
+        }
+
         if (property_exists($leaf, "searchedEvent")) {
             $leaf->searchedEvent->attachHandler(function () {
                 $this->setSearched();
