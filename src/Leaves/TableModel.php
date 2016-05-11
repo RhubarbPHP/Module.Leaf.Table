@@ -81,12 +81,18 @@ class TableModel extends LeafModel
      */
     public $getAdditionalClientSideRowData;
 
+    /**
+     * @var Event Raised when the user clicks a column heading
+     */
+    public $columnClickedEvent;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->getRowCssClassesEvent = new Event();
         $this->getAdditionalClientSideRowData = new Event();
+        $this->columnClickedEvent = new Event();
     }
 
     /**

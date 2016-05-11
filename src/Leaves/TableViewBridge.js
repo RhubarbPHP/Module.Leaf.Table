@@ -13,9 +13,9 @@ table.prototype.attachEvents = function () {
     for(var i = 0; i < nodes.length; i++){
         nodes[i].addEventListener('click', function () {
             var ths = self.viewNode.querySelectorAll('thead th');
-            var index = ths.indexOf(this);
+            var index = [].indexOf.call(ths,this);
 
-            self.raiseServerEvent('ColumnClicked', index);
+            self.raiseServerEvent('columnClicked', index);
             return false;
         });
     }
@@ -26,7 +26,7 @@ table.prototype.attachEvents = function () {
         nodes[i].addEventListener('click', function () {
             var tr = self.viewNode.parentNode;
 
-            self.raiseClientEvent('RowClicked', tr);
+            self.raiseClientEvent('rowClicked', tr);
             return false;
         });
     }

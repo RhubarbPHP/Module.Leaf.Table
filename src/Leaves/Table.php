@@ -84,6 +84,24 @@ class Table extends Leaf
         $this->model->pageSize = $pageSize;
     }
 
+    protected function onModelCreated()
+    {
+        parent::onModelCreated();
+
+        $this->model->columnClickedEvent->attachHandler(function($index){
+            // Get the inflated columns so we know which one we're dealing with.
+            $columns = $this->inflateColumns($this->columns);
+            $column = $columns[$index];
+
+            if ($column instanceof SortableColumn) {
+                // Change the sort order.
+                $this->changeSort($column->getSortableColumnName());
+            }
+
+            return $index;
+        });
+    }
+
     public function addFooter(FooterProvider $provider)
     {
         $provider->setTable($this);
@@ -158,19 +176,6 @@ class Table extends Leaf
         $this->view->attachEventHandler("PageChanged", function () {
             $this->onRefresh();
             $this->raiseEventOnViewBridge($this->getPresenterPath(), "OnPageChanged");
-        });
-
-        $this->view->attachEventHandler("ColumnClicked", function ($index) {
-            // Get the inflated columns so we know which one we're dealing with.
-            $columns = $this->inflateColumns($this->columns);
-            $column = $columns[$index];
-
-            if ($column instanceof SortableColumn) {
-                // Change the sort order.
-                $this->changeSort($column->getSortableColumnName());
-            }
-
-            return $index;
         });
     }
 
