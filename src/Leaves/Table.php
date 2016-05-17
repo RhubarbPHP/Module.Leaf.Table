@@ -84,6 +84,11 @@ class Table extends Leaf
         $this->model->pageSize = $pageSize;
     }
 
+    public function setExportColumns($columns)
+    {
+        $this->model->exportColumns = $columns;
+    }
+
     protected function onModelCreated()
     {
         parent::onModelCreated();
@@ -105,7 +110,7 @@ class Table extends Leaf
     public function addFooter(FooterProvider $provider)
     {
         $provider->setTable($this);
-        
+
         $this->model->footerProviders[] = $provider;
     }
 
