@@ -82,7 +82,7 @@ class TableView extends View
 
         ?>
         <div class='list'>
-            <table class="<?= $this->getTableCssClass(); ?>">
+            <table<?= $this->model->getClassAttribute(); ?>>
                 <thead>
                 <tr>
                     <?php

@@ -390,16 +390,13 @@ class Table extends Leaf
         $this->model->searched = true;
     }
 
+    /**
+     * @deprecated 
+     * @see addCssClassNames
+     */
     public function addTableCssClass($classNames)
     {
-        $classes = $this->model->tableCssClassNames;
-
-        if (!is_array($classes)) {
-            $classes = [];
-        }
-
-        $classes = array_merge($classes, $classNames);
-        $this->tableCssClassNames = $classes;
+        $this->addCssClassNames($classNames);
     }
 
     protected function beforeRender()

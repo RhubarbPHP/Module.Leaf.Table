@@ -52,11 +52,6 @@ class TableModel extends LeafModel
     public $footerProviders = [];
 
     /**
-     * @var string[]    An array of css class names for the table
-     */
-    public $tableCssClassNames = [];
-
-    /**
      * @var string The name of the column being used for sorting
      */
     public $sortColumn;
