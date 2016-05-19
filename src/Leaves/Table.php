@@ -105,7 +105,7 @@ class Table extends Leaf
     public function addFooter(FooterProvider $provider)
     {
         $provider->setTable($this);
-        
+
         $this->model->footerProviders[] = $provider;
     }
 
@@ -399,7 +399,7 @@ class Table extends Leaf
         }
 
         $classes = array_merge($classes, $classNames);
-        $this->tableCssClassNames = $classes;
+        $this->model->tableCssClassNames = $classes;
     }
 
     protected function beforeRender()
