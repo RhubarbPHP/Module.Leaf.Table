@@ -31,7 +31,7 @@ class TableView extends View
      */
     protected $model;
 
-    protected function getClientSideViewBridgeName()
+    protected function getViewBridgeName()
     {
         return "TableViewBridge";
     }
