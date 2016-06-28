@@ -24,6 +24,7 @@ use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Exceptions\ForceResponseException;
 use Rhubarb\Crown\Response\FileResponse;
 use Rhubarb\Crown\String\StringTools;
+use Rhubarb\Leaf\Leaves\BindableLeafTrait;
 use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Leaf\Leaves\LeafModel;
 use Rhubarb\Leaf\Table\Leaves\Columns\ModelColumn;
@@ -309,9 +310,14 @@ class Table extends Leaf
 
             if ($tableColumn && ($tableColumn instanceof TableColumn)) {
                 if ($tableColumn instanceof LeafColumn) {
-                    $tableColumn->getLeaf()->replaceEventHandler("GetBoundData", function ($dataKey, $viewIndex = false) {
-                        return $this->getDataForPresenter($dataKey, $viewIndex);
-                    });
+                    $leaf = $tableColumn->getLeaf();
+                    if ($leaf instanceof BindableLeafTrait) {
+                        $event = $leaf->getBindingValueRequestedEvent();
+                        $event->clearHandlers();
+                        $event->attachHandler(function($dataKey, $viewIndex = false) {
+                            return $this->getDataForPresenter($dataKey, $viewIndex);
+                        });
+                    }
                 }
 
                 $inflatedColumns[] = $tableColumn;
@@ -391,7 +397,7 @@ class Table extends Leaf
     }
 
     /**
-     * @deprecated 
+     * @deprecated
      * @see addCssClassNames
      */
     public function addTableCssClass($classNames)
