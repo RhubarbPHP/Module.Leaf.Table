@@ -22,6 +22,7 @@
 		}
 	},  
   "require": {
-    "rhubarbphp/module-leaf": "^1.0.0"
+    "rhubarbphp/module-leaf": "^1.0.0",
+    "rhubarbphp/module-leaf-paging": "dev-master"
   }
 }
