@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Table\Leaves\Columns;
 
 require_once __DIR__ . '/TableColumn.php';
 
-use Rhubarb\Leaf\Presenters\Leaf;
+use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Stem\Models\Model;
 
 /**
@@ -55,8 +55,8 @@ class LeafColumn extends TableColumn
     protected function getCellValue(Model $row, $decorator)
     {
         ob_start();
-
-        $this->leaf->displayWithIndex($row->UniqueIdentifier);
+        
+        $this->leaf->printWithIndex($row->UniqueIdentifier);
 
         return ob_get_clean();
     }
