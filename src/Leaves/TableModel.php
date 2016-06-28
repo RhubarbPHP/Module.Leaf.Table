@@ -81,6 +81,11 @@ class TableModel extends LeafModel
      */
     public $columnClickedEvent;
 
+    /**
+     * @var Event
+     */
+    public $pageChangedEvent;
+
     public function __construct()
     {
         parent::__construct();
@@ -88,6 +93,7 @@ class TableModel extends LeafModel
         $this->getRowCssClassesEvent = new Event();
         $this->getAdditionalClientSideRowData = new Event();
         $this->columnClickedEvent = new Event();
+        $this->pageChangedEvent = new Event();
     }
 
     /**

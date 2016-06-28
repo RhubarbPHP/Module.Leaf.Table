@@ -19,6 +19,7 @@
 namespace Rhubarb\Leaf\Table\Leaves;
 
 use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
+use Rhubarb\Leaf\Paging\Leaves\EventPager;
 use Rhubarb\Leaf\Table\Leaves\Columns\SortableColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\Template;
 use Rhubarb\Leaf\Views\View;
@@ -43,21 +44,15 @@ class TableView extends View
 
     public function createSubLeaves()
     {
-        //$pager = new EventPager();
+        $pager = new EventPager($this->model->collection);
 
         $this->registerSubLeaf(
-            //$pager
+            $pager
         );
 
-        //$this->leaves["pager"]->attachEventHandler("PageChanged", function () {
-        //    $this->raiseEvent("PageChanged");
-        //});
-    }
-
-    protected function configurePresenters()
-    {
-        //$this->leaves["pager"]->setCollection($this->raiseEvent("GetCollection"));
-        //$this->leaves["pager"]->setNumberPerPage($this->pageSize);
+        $pager->pageChangedEvent->attachHandler(function() {
+            $this->model->pageChangedEvent->raise();
+        });
     }
 
     public function printViewContent()
@@ -74,7 +69,9 @@ class TableView extends View
 
         //Always print the pager so we get javaScript loading
         //$this->leaves["pager"]->setSuppressContent($suppressPagerContent);
-        //print $this->leaves["pager"];
+        $this->leaves["EventPager"]->setNumberPerPage($this->model->pageSize);
+        $this->leaves["EventPager"]->setCollection($this->model->collection);
+        print $this->leaves["EventPager"];
 
         if ($suppressPagerContent) {
             return;
@@ -201,7 +198,7 @@ class TableView extends View
         <?php
 
         if ($this->model->repeatPagerAtBottom) {
-            //$this->leaves["pager"]->displayWithIndex("bottom");
+            $this->leaves["EventPager"]->printWithIndex("bottom");
         }
     }
 

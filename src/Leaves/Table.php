@@ -105,6 +105,11 @@ class Table extends Leaf
 
             return $index;
         });
+
+        $this->model->pageChangedEvent->attachHandler(function(){
+            $this->reRender();
+            //$this->raiseEventOnViewBridge($this->getPresenterPath(), "OnPageChanged");
+        });
     }
 
     public function addFooter(FooterProvider $provider)
@@ -172,16 +177,6 @@ class Table extends Leaf
     public function setCollection($collection)
     {
         $this->collection = $collection;
-    }
-
-    protected function configureView()
-    {
-        parent::configureView();
-
-        $this->view->attachEventHandler("PageChanged", function () {
-            $this->onRefresh();
-            $this->raiseEventOnViewBridge($this->getPresenterPath(), "OnPageChanged");
-        });
     }
 
     protected function changeSort($columnName)
