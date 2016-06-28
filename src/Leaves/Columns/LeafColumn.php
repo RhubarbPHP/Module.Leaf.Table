@@ -55,7 +55,7 @@ class LeafColumn extends TableColumn
     protected function getCellValue(Model $row, $decorator)
     {
         ob_start();
-        
+
         $this->leaf->printWithIndex($row->UniqueIdentifier);
 
         return ob_get_clean();
