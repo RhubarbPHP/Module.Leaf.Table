@@ -23,8 +23,8 @@ table.prototype.attachEvents = function () {
     nodes = this.viewNode.querySelectorAll('tbody tr td.clickable');
 
     for(i = 0; i < nodes.length; i++) {
-        nodes[i].addEventListener('click', function () {
-            var tr = self.viewNode.parentNode;
+        nodes[i].addEventListener('click', function (event) {
+            var tr = event.target.parentNode;
 
             self.raiseClientEvent('rowClicked', tr);
             return false;
