@@ -16,11 +16,6 @@
       "Rhubarb\\Leaf\\Table\\": "src/"
     }
   },
-	"extra": {
-		"branch-alias": {
-			"dev-master": "1.0.0-dev"
-		}
-	},  
   "require": {
     "rhubarbphp/module-leaf": "^1.1.0",
     "rhubarbphp/module-leaf-paging": "^1.0.0"
