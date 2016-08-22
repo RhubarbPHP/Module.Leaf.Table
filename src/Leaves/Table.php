@@ -396,6 +396,25 @@ class Table extends Leaf
         $this->model->searched = true;
     }
 
+    public function setUnsearchedHtml($unsearchedHtml)
+    {
+        $this->model->unsearchedHtml = $unsearchedHtml;
+    }
+
+    /**
+     * Sets the message to appear when No Data is found
+     * @param $noDataHtml
+     */
+    public function setNoDataHtml($noDataHtml)
+    {
+        $this->model->noDataHtml = $noDataHtml;
+    }
+
+    public function setRepeatPagerAtBottom($repeatPagerAtBottom)
+    {
+        $this->model->repeatPagerAtBottom = $repeatPagerAtBottom;
+    }
+
     /**
      * @deprecated
      * @see addCssClassNames
