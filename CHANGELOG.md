@@ -4,7 +4,7 @@
 
 ### 1.0.2
 
-Fixed:  Issue where 
+Fixed:  Fixing issue where the collection and pagesize was not being set before the view had been initialised
 
 ### 1.0.1
 
