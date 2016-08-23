@@ -18,6 +18,6 @@
   },
   "require": {
     "rhubarbphp/module-leaf": "^1.1.0",
-    "rhubarbphp/module-leaf-paging": "^1.0.0"
+    "rhubarbphp/module-leaf-paging": "^1.0.3"
   }
 }

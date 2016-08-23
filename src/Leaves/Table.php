@@ -75,14 +75,18 @@ class Table extends Leaf
      */
     private $currentRow;
 
+    private $collection;
+
+    private $pageSize;
+
     public function __construct(Collection $list = null, $pageSize = 50, $presenterName = "Table")
     {
+        $this->collection = $list;
+        $this->pageSize = $pageSize;
+
         parent::__construct($presenterName);
 
         $this->getFilterEvent = new Event();
-
-        $this->model->collection = $list;
-        $this->model->pageSize = $pageSize;
     }
 
     public function setExportColumns($columns)
@@ -93,6 +97,9 @@ class Table extends Leaf
     protected function onModelCreated()
     {
         parent::onModelCreated();
+
+        $this->model->collection = $this->collection;
+        $this->model->pageSize = $this->pageSize;
 
         $this->model->columnClickedEvent->attachHandler(function($index){
             // Get the inflated columns so we know which one we're dealing with.
