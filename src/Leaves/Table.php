@@ -463,4 +463,9 @@ class Table extends Leaf
 
         return $model;
     }
+
+    public function setGetRowCssClassesEvent(Event $event)
+    {
+        $this->model->getRowCssClassesEvent = $event;
+    }
 }
