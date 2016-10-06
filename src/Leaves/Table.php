@@ -214,9 +214,18 @@ class Table extends Leaf
 
     private function getSchemaColumns()
     {
+        // Make sure the collection has been fetched otherwise pull up schema details won't be
+        // available.
+        $this->model->collection->count();
+
         if (!$this->schemaColumns) {
             $schema = $this->model->collection->getModelSchema();
             $this->schemaColumns = $schema->getColumns();
+
+            // Loop over pull up column details and consider them too.
+            foreach($this->model->collection->additionalColumns as $alias => $details){
+                $this->schemaColumns[$alias] = $details["column"];
+            }
         }
 
         return $this->schemaColumns;
