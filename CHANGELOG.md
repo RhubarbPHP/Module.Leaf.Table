@@ -1,6 +1,8 @@
 # Changelog
 
-### 1.0.x
+### 1.0.4
+
+Added:  Table now consults additionalColumns of a Collection to support sorting and mapping for aggregates and pull ups.
 
 ### 1.0.3
 
