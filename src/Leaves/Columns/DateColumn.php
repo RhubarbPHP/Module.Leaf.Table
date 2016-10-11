@@ -39,6 +39,6 @@ class DateColumn extends ModelColumn
             return $value->format($this->dateFormat);
         }
 
-        return $value;
+        return parent::getFormattedValue($value);
     }
 }

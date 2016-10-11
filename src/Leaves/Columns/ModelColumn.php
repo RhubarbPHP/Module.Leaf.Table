@@ -51,6 +51,8 @@ class ModelColumn extends TableColumn implements SortableColumn
 
         $this->sortColumnName = ($sortColumnName == "") ? $columnName : $sortColumnName;
 
+        $this->escapeHtmlSpecialCharacters = true;
+
         parent::__construct($label);
     }
 

@@ -28,7 +28,7 @@ class BooleanColumn extends ModelColumn
             return ($value) ? "Yes" : "No";
         }
 
-        return $value;
+        return parent::getFormattedValue($value);
     }
 
 }

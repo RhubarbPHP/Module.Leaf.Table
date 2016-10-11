@@ -39,6 +39,8 @@ abstract class TableColumn
 
     private $cssClasses = [];
 
+    public $escapeHtmlSpecialCharacters = false;
+
     public function __construct($label = "")
     {
         $this->label = $label;
@@ -58,6 +60,10 @@ abstract class TableColumn
 
     protected function getFormattedValue($value)
     {
+        if ($this->escapeHtmlSpecialCharacters) {
+            return htmlspecialchars($value);
+        }
+
         return $value;
     }
 
