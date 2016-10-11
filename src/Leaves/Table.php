@@ -27,6 +27,7 @@ use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Leaves\BindableLeafTrait;
 use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Leaf\Leaves\LeafModel;
+use Rhubarb\Leaf\Table\Leaves\Columns\ClosureColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\ModelColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\LeafColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\SortableColumn;
@@ -320,6 +321,8 @@ class Table extends Leaf
             if (is_string($tableColumn)) {
                 $value = (string)$value;
                 $tableColumn = $this->createColumnFromString($value, $label);
+            } elseif (is_callable($tableColumn)) {
+                $tableColumn = new ClosureColumn($label, $tableColumn);
             } elseif (!($tableColumn instanceof TableColumn)) {
                 $tableColumn = $this->createColumnFromObject($tableColumn, $label);
             }
