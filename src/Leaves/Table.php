@@ -185,7 +185,7 @@ class Table extends Leaf
 
     public function setCollection($collection)
     {
-        $this->collection = $collection;
+        $this->model->collection = $this->collection = $collection;
     }
 
     protected function changeSort($columnName)
