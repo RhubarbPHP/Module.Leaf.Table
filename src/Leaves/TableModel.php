@@ -10,7 +10,6 @@ use Rhubarb\Stem\Collections\Collection;
 
 class TableModel extends LeafModel
 {
-
     /**
      * @var Collection The stem collection being presented.
      */
@@ -86,6 +85,11 @@ class TableModel extends LeafModel
      */
     public $pageChangedEvent;
 
+    /**
+     * @var Event
+     */
+    public $pagerUrlStateNameChangedEvent;
+
     public function __construct()
     {
         parent::__construct();
@@ -94,6 +98,7 @@ class TableModel extends LeafModel
         $this->getAdditionalClientSideRowData = new Event();
         $this->columnClickedEvent = new Event();
         $this->pageChangedEvent = new Event();
+        $this->pagerUrlStateNameChangedEvent = new Event();
     }
 
     /**
@@ -111,6 +116,4 @@ class TableModel extends LeafModel
 
         return $list;
     }
-
-
 }

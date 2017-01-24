@@ -90,6 +90,11 @@ class Table extends Leaf
         $this->getFilterEvent = new Event();
     }
 
+    public function setPagerUrlStateName($name = "page")
+    {
+        $this->model->pagerUrlStateNameChangedEvent->raise($name);
+    }
+
     public function setExportColumns($columns)
     {
         $this->model->exportColumns = $columns;

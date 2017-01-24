@@ -46,9 +46,16 @@ class TableView extends View
     {
         $pager = new EventPager($this->model->collection);
 
+        $this->model->pagerUrlStateNameChangedEvent->attachHandler(function ($name) use ($pager) {
+            $pager->setUrlStateName($name);
+        });
+
         $this->registerSubLeaf(
             $pager
         );
+
+        $pager->setNumberPerPage($this->model->pageSize);
+        $pager->setCollection($this->model->collection);
 
         $pager->pageChangedEvent->attachHandler(function() {
             $this->model->pageChangedEvent->raise();
