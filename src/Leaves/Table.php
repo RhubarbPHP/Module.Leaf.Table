@@ -26,10 +26,9 @@ use Rhubarb\Crown\Response\FileResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Leaves\BindableLeafTrait;
 use Rhubarb\Leaf\Leaves\Leaf;
-use Rhubarb\Leaf\Leaves\LeafModel;
 use Rhubarb\Leaf\Table\Leaves\Columns\ClosureColumn;
-use Rhubarb\Leaf\Table\Leaves\Columns\ModelColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\LeafColumn;
+use Rhubarb\Leaf\Table\Leaves\Columns\ModelColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\SortableColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\TableColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\Template;
@@ -44,7 +43,6 @@ use Rhubarb\Stem\Schema\SolutionSchema;
 
 /**
  * Presents an HTML table using a ModelList as it's data source
-
  */
 class Table extends Leaf
 {
@@ -68,8 +66,15 @@ class Table extends Leaf
 
     /**
      * @var Event An opportunity for a host to return specific classes for a particular row
+     *            It will be raised with arguments for the $model and the $rowNumber.
      */
     public $getRowCssClassesEvent;
+
+    /**
+     * @var Event An opportunity for a host to provide additional data for data-* attributes on the table rows
+     *            It will be raised with arguments for the $model and the $rowNumber.
+     */
+    public $getAdditionalClientSideRowDataEvent;
 
     /**
      * @var Model
@@ -100,6 +105,11 @@ class Table extends Leaf
         $this->model->exportColumns = $columns;
     }
 
+    protected function createModel()
+    {
+        return new TableModel();
+    }
+
     protected function onModelCreated()
     {
         parent::onModelCreated();
@@ -107,7 +117,7 @@ class Table extends Leaf
         $this->model->collection = $this->collection;
         $this->model->pageSize = $this->pageSize;
 
-        $this->model->columnClickedEvent->attachHandler(function($index){
+        $this->model->columnClickedEvent->attachHandler(function ($index) {
             // Get the inflated columns so we know which one we're dealing with.
             $columns = $this->inflateColumns($this->columns);
             $column = $columns[$index];
@@ -120,10 +130,13 @@ class Table extends Leaf
             return $index;
         });
 
-        $this->model->pageChangedEvent->attachHandler(function(){
+        $this->model->pageChangedEvent->attachHandler(function () {
             $this->reRender();
-            //$this->raiseEventOnViewBridge($this->getPresenterPath(), "OnPageChanged");
         });
+
+        // Pass through for events
+        $this->getRowCssClassesEvent = $this->model->getRowCssClassesEvent;
+        $this->getAdditionalClientSideRowDataEvent = $this->model->getAdditionalClientSideRowDataEvent;
     }
 
     public function addFooter(FooterProvider $provider)
@@ -135,7 +148,7 @@ class Table extends Leaf
 
     public function clearFooters()
     {
-        $this->footerProviders = [];
+        $this->model->footerProviders = [];
     }
 
     public function getCollection()
@@ -147,13 +160,13 @@ class Table extends Leaf
     {
         $this->configureFilters();
 
-        $cachePath = Application::current()->applicationRootPath."/cache/";
+        $cachePath = Application::current()->applicationRootPath . "/cache/";
 
-        if (file_exists($cachePath."export.csv")) {
-            unlink($cachePath."export.csv");
+        if (file_exists($cachePath . "export.csv")) {
+            unlink($cachePath . "export.csv");
         }
 
-        $file = $cachePath."export.csv";
+        $file = $cachePath . "export.csv";
 
         $stream = new CsvStream($file);
 
@@ -229,8 +242,8 @@ class Table extends Leaf
             $this->schemaColumns = $schema->getColumns();
 
             // Loop over pull up column details and consider them too.
-            foreach($this->model->collection->additionalColumns as $alias => $details){
-                $this->schemaColumns[$alias] = $details["column"];
+            foreach ($this->model->collection->additionalColumns as $alias => $details) {
+                $this->schemaColumns[$alias] = $details['column'];
             }
         }
 
@@ -249,6 +262,7 @@ class Table extends Leaf
         }
 
         $schemaColumns = $this->getSchemaColumns();
+        /** @var Model $sampleModel */
         $sampleModel = new $modelClassName();
         $decorator = $sampleModel->getDecorator();
 
@@ -267,7 +281,7 @@ class Table extends Leaf
             return ModelColumn::createTableColumnForSchemaColumn($schemaColumns[$columnName], $label);
         } else {
             // If the property exists as a computed column let's use that.
-            if (method_exists($modelClassName, "Get" . $columnName)) {
+            if (method_exists($modelClassName, 'Get' . $columnName)) {
                 // Let this computed column be treated as a normal String model column.
                 return new ModelColumn($columnName, $label);
             }
@@ -278,15 +292,15 @@ class Table extends Leaf
                 return new ModelColumn($columnName, $label);
             }
 
-            if (preg_match("/^[.\w]+$/", $columnName)) {
+            if (preg_match('/^[.\w]+$/', $columnName)) {
                 // If it's all characters and contains a full stop it must be a navigation property.
-                if (preg_match("/\./", $columnName)) {
+                if (preg_match('/\./', $columnName)) {
                     if ($autoLabelled) {
-                        $parts = explode(".", $columnName);
+                        $parts = explode('.', $columnName);
                         $label = StringTools::wordifyStringByUpperCase($parts[sizeof($parts) - 1]);
                     }
 
-                    return new Template("{" . $columnName . "}", $label);
+                    return new Template('{' . $columnName . '}', $label);
                 } else {
                     $relationships = SolutionSchema::getAllRelationshipsForModel($this->model->collection->getModelClassName());
 
@@ -313,6 +327,8 @@ class Table extends Leaf
 
     /**
      * Expands the columns array, creating TableColumn objects where needed.
+     * @param array $columns
+     * @return array
      */
     protected function inflateColumns($columns)
     {
@@ -321,7 +337,7 @@ class Table extends Leaf
         foreach ($columns as $key => $value) {
             $tableColumn = $value;
 
-            $label = (!is_numeric($key)) ? $key : null;
+            $label = !is_numeric($key) ? $key : null;
 
             if (is_string($tableColumn)) {
                 $value = (string)$value;
@@ -332,13 +348,13 @@ class Table extends Leaf
                 $tableColumn = $this->createColumnFromObject($tableColumn, $label);
             }
 
-            if ($tableColumn && ($tableColumn instanceof TableColumn)) {
+            if ($tableColumn && $tableColumn instanceof TableColumn) {
                 if ($tableColumn instanceof LeafColumn) {
                     $leaf = $tableColumn->getLeaf();
                     if ($leaf instanceof BindableLeafTrait) {
                         $event = $leaf->getBindingValueRequestedEvent();
                         $event->clearHandlers();
-                        $event->attachHandler(function($dataKey, $viewIndex = false) {
+                        $event->attachHandler(function ($dataKey, $viewIndex = false) {
                             return $this->getDataForPresenter($dataKey, $viewIndex);
                         });
                     }
@@ -354,7 +370,7 @@ class Table extends Leaf
     /**
      * Provides model data to the requesting presenter.
      *
-     * This implementation ensures the PresenterColumns are effectively receive data from the table row
+     * This implementation ensures the LeafColumns are able to receive data from the row's model
      *
      * @param string $dataKey
      * @param bool|int $viewIndex
@@ -363,7 +379,7 @@ class Table extends Leaf
     protected function getDataForPresenter($dataKey, $viewIndex = false)
     {
         if (!isset($this->currentRow[$dataKey])) {
-            return $this->raiseEvent("GetBoundData", $dataKey, $viewIndex);
+            return $this->model->getBoundValue($dataKey, $viewIndex);
         }
 
         $value = $this->currentRow[$dataKey];
@@ -464,21 +480,6 @@ class Table extends Leaf
     protected function getViewClass()
     {
         return TableView::class;
-    }
-
-    /**
-     * Should return a class that derives from LeafModel
-     *
-     * @return LeafModel
-     */
-    protected function createModel()
-    {
-        $model = new TableModel();
-
-        // Pass through for getRowCssClassesEvent;
-        $this->getRowCssClassesEvent = $model->getRowCssClassesEvent;
-
-        return $model;
     }
 
     public function setGetRowCssClassesEvent(Event $event)

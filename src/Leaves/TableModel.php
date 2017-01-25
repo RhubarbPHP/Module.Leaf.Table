@@ -73,7 +73,7 @@ class TableModel extends LeafModel
     /**
      * @var Event Raised when the view needs additional row data for data- attributes
      */
-    public $getAdditionalClientSideRowData;
+    public $getAdditionalClientSideRowDataEvent;
 
     /**
      * @var Event Raised when the user clicks a column heading
@@ -95,7 +95,7 @@ class TableModel extends LeafModel
         parent::__construct();
 
         $this->getRowCssClassesEvent = new Event();
-        $this->getAdditionalClientSideRowData = new Event();
+        $this->getAdditionalClientSideRowDataEvent = new Event();
         $this->columnClickedEvent = new Event();
         $this->pageChangedEvent = new Event();
         $this->pagerUrlStateNameChangedEvent = new Event();

@@ -137,7 +137,7 @@ class TableView extends View
                         }
                     }
 
-                    $rowData = $this->model->getAdditionalClientSideRowData->raise($model, $rowNumber);
+                    $rowData = $this->model->getAdditionalClientSideRowDataEvent->raise($model, $rowNumber);
 
                     $rowDataString = "";
                     if (is_array($rowData) && count($rowData)) {
