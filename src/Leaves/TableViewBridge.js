@@ -1,8 +1,8 @@
 var table = function (leafPath) {
-    window.rhubarb.viewBridgeClasses.ViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.UrlStateViewBridge.apply(this, arguments);
 };
 
-table.prototype = new window.rhubarb.viewBridgeClasses.ViewBridge();
+table.prototype = new window.rhubarb.viewBridgeClasses.UrlStateViewBridge();
 table.prototype.constructor = table;
 
 table.prototype.attachEvents = function () {
@@ -16,6 +16,16 @@ table.prototype.attachEvents = function () {
             var index = [].indexOf.call(ths,this);
 
             self.raiseServerEvent('columnClicked', index);
+
+            if (self.model.urlStateName) {
+                // Force string comparison to ensure -0 is seen as different from 0
+                if (self.getUrlStateParam() === '' + index) {
+                    self.setUrlStateParam('-' + index);
+                } else {
+                    self.setUrlStateParam(index);
+                }
+            }
+
             return false;
         });
     }

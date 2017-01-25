@@ -22,10 +22,12 @@ use Rhubarb\Crown\Application;
 use Rhubarb\Crown\DataStreams\CsvStream;
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Exceptions\ForceResponseException;
+use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Crown\Response\FileResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Leaves\BindableLeafTrait;
 use Rhubarb\Leaf\Leaves\Leaf;
+use Rhubarb\Leaf\Leaves\UrlStateLeaf;
 use Rhubarb\Leaf\Table\Leaves\Columns\ClosureColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\LeafColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\ModelColumn;
@@ -44,7 +46,7 @@ use Rhubarb\Stem\Schema\SolutionSchema;
 /**
  * Presents an HTML table using a ModelList as it's data source
  */
-class Table extends Leaf
+class Table extends UrlStateLeaf
 {
     /**
      * @var TableModel
@@ -81,23 +83,20 @@ class Table extends Leaf
      */
     private $currentRow;
 
-    private $collection;
-
-    private $pageSize;
-
     public function __construct(Collection $list = null, $pageSize = 50, $presenterName = "Table")
     {
-        $this->collection = $list;
-        $this->pageSize = $pageSize;
-
-        parent::__construct($presenterName);
+        parent::__construct($presenterName, function (TableModel $model) use ($list, $pageSize) {
+            $model->collection = $list;
+            $model->pageSize = $pageSize;
+        });
 
         $this->getFilterEvent = new Event();
     }
 
-    public function setPagerUrlStateName($name = "page")
+    public function setUrlStateNames($pagerName = "page", $sortName = "sort")
     {
-        $this->model->pagerUrlStateNameChangedEvent->raise($name);
+        $this->model->pagerUrlStateNameChangedEvent->raise($pagerName);
+        $this->model->urlStateName = $sortName;
     }
 
     public function setExportColumns($columns)
@@ -113,9 +112,6 @@ class Table extends Leaf
     protected function onModelCreated()
     {
         parent::onModelCreated();
-
-        $this->model->collection = $this->collection;
-        $this->model->pageSize = $this->pageSize;
 
         $this->model->columnClickedEvent->attachHandler(function ($index) {
             // Get the inflated columns so we know which one we're dealing with.
@@ -203,7 +199,7 @@ class Table extends Leaf
 
     public function setCollection($collection)
     {
-        $this->model->collection = $this->collection = $collection;
+        $this->model->collectionUpdatedEvent->raise($collection);
     }
 
     protected function changeSort($columnName)
@@ -328,7 +324,7 @@ class Table extends Leaf
     /**
      * Expands the columns array, creating TableColumn objects where needed.
      * @param array $columns
-     * @return array
+     * @return TableColumn[]
      */
     protected function inflateColumns($columns)
     {
@@ -395,6 +391,7 @@ class Table extends Leaf
     {
         $this->getFilterEvent->raise(function (Filter $filter) {
             $this->model->collection->filter($filter);
+            $this->model->collectionUpdatedEvent->raise($this->model->collection);
         });
 
         $this->applySort();
@@ -407,10 +404,10 @@ class Table extends Leaf
             // collection the table would use to display it's data. This is often used for counting
             // potential refinements to the list.
             $leaf->getCollectionEvent->attachHandler(function () {
-
                 $collection = $this->getCollection();
                 $this->getFilterEvent->raise(function (Filter $filter) use ($collection) {
                     $collection->filter($filter);
+                    $this->model->collectionUpdatedEvent->raise($this->model->collection);
                 });
 
                 return $collection;
@@ -485,5 +482,31 @@ class Table extends Leaf
     public function setGetRowCssClassesEvent(Event $event)
     {
         $this->model->getRowCssClassesEvent = $event;
+    }
+
+    protected function parseUrlState(WebRequest $request)
+    {
+        if ($this->getUrlStateName()) {
+            $sort = $request->get($this->getUrlStateName());
+
+            // Need to treat this as string rather than number, as -0 would be seen as the same as 0
+            if (StringTools::startsWith($sort, '-')) {
+                $sort = substr($sort, 1);
+                $asc = false;
+            } else {
+                $asc = true;
+            }
+
+            if (!is_numeric($sort)) {
+                return;
+            }
+
+            $column = $this->inflateColumns($this->columns)[(int)$sort];
+            if ($column instanceof SortableColumn) {
+                // Change the sort order.
+                $this->model->sortColumn = $column->getSortableColumnName();
+                $this->model->sortDirection = $asc;
+            }
+        }
     }
 }
