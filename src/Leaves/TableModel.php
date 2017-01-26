@@ -3,14 +3,13 @@
 namespace Rhubarb\Leaf\Table\Leaves;
 
 use Rhubarb\Crown\Events\Event;
-use Rhubarb\Leaf\Leaves\LeafModel;
+use Rhubarb\Leaf\Leaves\UrlStateLeafModel;
 use Rhubarb\Leaf\Table\Leaves\Columns\TableColumn;
-use Rhubarb\Leaf\Table\Leaves\FooterProviders\FooterColumn;
+use Rhubarb\Leaf\Table\Leaves\FooterProviders\FooterProvider;
 use Rhubarb\Stem\Collections\Collection;
 
-class TableModel extends LeafModel
+class TableModel extends UrlStateLeafModel
 {
-
     /**
      * @var Collection The stem collection being presented.
      */
@@ -47,7 +46,7 @@ class TableModel extends LeafModel
     public $pageSize;
 
     /**
-     * @var FooterColumn[]  An array of footers to present
+     * @var FooterProvider[]  An array of FooterProviders to provide footer content
      */
     public $footerProviders = [];
 
@@ -74,7 +73,7 @@ class TableModel extends LeafModel
     /**
      * @var Event Raised when the view needs additional row data for data- attributes
      */
-    public $getAdditionalClientSideRowData;
+    public $getAdditionalClientSideRowDataEvent;
 
     /**
      * @var Event Raised when the user clicks a column heading
@@ -86,18 +85,41 @@ class TableModel extends LeafModel
      */
     public $pageChangedEvent;
 
+    /**
+     * @var Event
+     */
+    public $pagerUrlStateNameChangedEvent;
+
+    /**
+     * @var Event
+     */
+    public $collectionUpdatedEvent;
+
+    /**
+     * @var string The name of the GET param which will provide state for this table in the URL
+     * If you have multiple tables on a page and want URL state to apply to them all independently, you'll need to make this unique.
+     * Set it to null to disable URL state for this table.
+     */
+    public $urlStateName = 'sort';
+
     public function __construct()
     {
         parent::__construct();
 
         $this->getRowCssClassesEvent = new Event();
-        $this->getAdditionalClientSideRowData = new Event();
+        $this->getAdditionalClientSideRowDataEvent = new Event();
         $this->columnClickedEvent = new Event();
         $this->pageChangedEvent = new Event();
+        $this->pagerUrlStateNameChangedEvent = new Event();
+        $this->collectionUpdatedEvent = new Event();
+
+        $this->collectionUpdatedEvent->attachHandler(function (Collection $collection) {
+            $this->collection = $collection;
+        });
     }
 
     /**
-     * Return the list of properties that can be exposed publically
+     * Return the list of properties that can be exposed publicly
      *
      * @return array
      */
@@ -111,6 +133,4 @@ class TableModel extends LeafModel
 
         return $list;
     }
-
-
 }

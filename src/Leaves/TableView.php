@@ -19,13 +19,14 @@
 namespace Rhubarb\Leaf\Table\Leaves;
 
 use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
+use Rhubarb\Leaf\Leaves\UrlStateView;
 use Rhubarb\Leaf\Paging\Leaves\EventPager;
 use Rhubarb\Leaf\Table\Leaves\Columns\SortableColumn;
 use Rhubarb\Leaf\Table\Leaves\Columns\Template;
-use Rhubarb\Leaf\Views\View;
+use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Decorators\DataDecorator;
 
-class TableView extends View
+class TableView extends UrlStateView
 {
     /**
      * @var TableModel
@@ -34,21 +35,32 @@ class TableView extends View
 
     protected function getViewBridgeName()
     {
-        return "TableViewBridge";
+        return 'TableViewBridge';
     }
 
     public function getDeploymentPackage()
     {
-        return new LeafDeploymentPackage(__DIR__ . "/TableViewBridge.js");
+        $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . '/TableViewBridge.js';
+        return $package;
     }
 
     public function createSubLeaves()
     {
         $pager = new EventPager($this->model->collection);
 
-        $this->registerSubLeaf(
-            $pager
-        );
+        $this->model->pagerUrlStateNameChangedEvent->attachHandler(function ($name) use ($pager) {
+            $pager->setUrlStateName($name);
+        });
+
+        $this->registerSubLeaf($pager);
+
+        $pager->setNumberPerPage($this->model->pageSize);
+        $pager->setCollection($this->model->collection);
+
+        $this->model->collectionUpdatedEvent->attachHandler(function (Collection $collection) use ($pager) {
+            $pager->setCollection($collection);
+        });
 
         $pager->pageChangedEvent->attachHandler(function() {
             $this->model->pageChangedEvent->raise();
@@ -68,9 +80,6 @@ class TableView extends View
         }
 
         //Always print the pager so we get javaScript loading
-        //$this->leaves["pager"]->setSuppressContent($suppressPagerContent);
-        $this->leaves["EventPager"]->setNumberPerPage($this->model->pageSize);
-        $this->leaves["EventPager"]->setCollection($this->model->collection);
         print $this->leaves["EventPager"];
 
         if ($suppressPagerContent) {
@@ -78,7 +87,7 @@ class TableView extends View
         }
 
         ?>
-        <div class='list'>
+        <div class="list">
             <table<?= $this->model->getClassAttribute(); ?>>
                 <thead>
                 <tr>
@@ -130,7 +139,7 @@ class TableView extends View
                         }
                     }
 
-                    $rowData = $this->model->getAdditionalClientSideRowData->raise($model, $rowNumber);
+                    $rowData = $this->model->getAdditionalClientSideRowDataEvent->raise($model, $rowNumber);
 
                     $rowDataString = "";
                     if (is_array($rowData) && count($rowData)) {
@@ -200,11 +209,5 @@ class TableView extends View
         if ($this->model->repeatPagerAtBottom) {
             $this->leaves["EventPager"]->printWithIndex("bottom");
         }
-    }
-
-
-    public function getTableCssClass()
-    {
-        return implode(" ", $this->model->tableCssClassNames);
     }
 }
