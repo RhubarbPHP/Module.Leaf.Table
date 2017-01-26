@@ -1,6 +1,8 @@
 # Changelog
 
-### 1.0.x
+### 1.1.0
+
+Added:  Storing pager and sort column in URL state
 
 ### 1.0.4
 
