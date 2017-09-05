@@ -67,6 +67,28 @@ class TableView extends UrlStateView
         });
     }
 
+    protected function printColumnLabel($label, $classes)
+    {
+        $classString = implode(" ", $classes);
+
+        if ($classString != "") {
+            $classString = " class=\"" . $classString . "\"";
+        }
+
+        print "<th" . $classString . ">" . $label . "</th>";
+    }
+
+    protected function printCell($content, $classes, $customHtmlAttributes = "", $label = "")
+    {
+        $classString = implode(" ", $classes);
+
+        if ($classString != "") {
+            $classString = " class=\"" . $classString . "\"";
+        }
+
+        print "<td" . $classString . " ".$customHtmlAttributes.">" . $content . "</td>";
+    }
+
     public function printViewContent()
     {
         $suppressPagerContent = false;
@@ -110,13 +132,8 @@ class TableView extends UrlStateView
                             }
                         }
 
-                        $classString = implode(" ", $classes);
-
-                        if ($classString != "") {
-                            $classString = " class=\"" . $classString . "\"";
-                        }
-
-                        print "\r\n\t\t\t\t\t<th" . $classString . ">" . $column->label . "</th>";
+                        print "\r\n\t\t\t\t\t";
+                        print $this->printColumnLabel($column->label, $classes);
                     }
 
                     ?>
@@ -164,12 +181,6 @@ class TableView extends UrlStateView
                             $classes[] = "clickable";
                         }
 
-                        $classString = implode(" ", $classes);
-
-                        if ($classString != "") {
-                            $classString = " class=\"" . $classString . "\"";
-                        }
-
                         $customAttributes = $column->getCustomCellAttributes($model);
                         $customAttributesString = "";
 
@@ -179,7 +190,9 @@ class TableView extends UrlStateView
                             }
                         }
 
-                        print "\r\n\t\t\t\t\t<td" . $classString . $customAttributesString . ">" . $cellContent . "</td>";
+                        print "\r\n\t\t\t\t\t";
+
+                        $this->printCell($cellContent, $classes, $customAttributesString, $column->label);
                     }
 
                     print "\r\n\t\t\t\t</tr>";

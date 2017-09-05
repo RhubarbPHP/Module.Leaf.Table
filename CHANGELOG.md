@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.1
+
+Added:  TableView now has overridable methods to control the behaviour of printing cells and headers.
+
 ### 1.1.0
 
 Added:  Storing pager and sort column in URL state
