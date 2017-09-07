@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.2
+
+Fixed:	Fixed issue where counts made using the getCollectionEvent filter were confused due to combining filters
+
 ### 1.1.1
 
 Added:  TableView now has overridable methods to control the behaviour of printing cells and headers.

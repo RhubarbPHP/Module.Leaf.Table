@@ -87,6 +87,7 @@ class Table extends UrlStateLeaf
     {
         parent::__construct($presenterName, function (TableModel $model) use ($list, $pageSize) {
             $model->collection = $list;
+            $model->originalCollection = clone $list;
             $model->pageSize = $pageSize;
         });
 
@@ -200,6 +201,7 @@ class Table extends UrlStateLeaf
     public function setCollection($collection)
     {
         $this->model->collectionUpdatedEvent->raise($collection);
+        $this->model->originalCollection = clone $collection;
     }
 
     protected function changeSort($columnName)
@@ -404,7 +406,7 @@ class Table extends UrlStateLeaf
             // collection the table would use to display it's data. This is often used for counting
             // potential refinements to the list.
             $leaf->getCollectionEvent->attachHandler(function () {
-                $collection = $this->getCollection();
+                $collection = clone $this->model->originalCollection;
                 $this->getFilterEvent->raise(function (Filter $filter) use ($collection) {
                     $collection->filter($filter);
                     $this->model->collectionUpdatedEvent->raise($this->model->collection);
