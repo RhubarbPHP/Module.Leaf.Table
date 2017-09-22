@@ -178,6 +178,8 @@ class Table extends UrlStateLeaf
             $headings
         );
 
+        $this->model->collection->disableRanging();
+
         foreach ($this->model->collection as $item) {
             $data = [];
 
@@ -237,7 +239,13 @@ class Table extends UrlStateLeaf
 
         if (!$this->schemaColumns) {
             $schema = $this->model->collection->getModelSchema();
-            $this->schemaColumns = $schema->getColumns();
+            $this->schemaColumns = [];
+            $columns = $schema->getColumns();
+
+            foreach($columns as $column){
+                $storageColumns = $column->getStorageColumns();
+                $this->schemaColumns = array_merge($this->schemaColumns, $storageColumns);
+            }
 
             // Loop over pull up column details and consider them too.
             foreach ($this->model->collection->additionalColumns as $alias => $details) {

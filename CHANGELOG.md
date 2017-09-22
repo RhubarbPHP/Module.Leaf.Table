@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.1.3
+
+Added:  Support for composite columns being used in tables
+Fixed:  Export now exports without ranging
+
 ### 1.1.2
 
 Fixed:	Fixed issue where counts made using the getCollectionEvent filter were confused due to combining filters
