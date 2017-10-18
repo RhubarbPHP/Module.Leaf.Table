@@ -67,11 +67,15 @@ abstract class TableColumn
         return $value;
     }
 
-    public final function getCellContent(Model $row, $decorator)
+    public final function getCellContent(Model $row, $decorator, $formatted = true)
     {
         $value = $this->getCellValue($row, $decorator);
 
-        return $this->getFormattedValue($value);
+        if ($formatted) {
+            return $this->getFormattedValue($value);
+        }
+
+        return $value;
     }
 
     /**
