@@ -157,7 +157,7 @@ class Table extends UrlStateLeaf
     {
         $this->configureFilters();
 
-        $cachePath = Application::current()->applicationRootPath . "/cache/";
+        $cachePath = TEMP_DIR . "/cache/";
 
         if (file_exists($cachePath . "export.csv")) {
             unlink($cachePath . "export.csv");
