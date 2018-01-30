@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.4
+
+Fixed:  Fixed tables export to use TEMP_DIR"
+
 ### 1.1.3
 
 Added:  Support for composite columns being used in tables
