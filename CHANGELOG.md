@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.5
+
+Fixed:  Table columns weren't applying sorting classes correctly.
+
 ### 1.1.4
 
 Fixed:  Fixed tables export to use TEMP_DIR"

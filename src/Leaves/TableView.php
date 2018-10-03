@@ -115,7 +115,13 @@ class TableView extends UrlStateView
                 <tr>
                     <?php
 
-                    $sorts = $this->model->collection->getSorts();
+                    $collectionSorts = $this->model->collection->getSorts();
+
+                    $sorts = [];
+
+                    foreach($collectionSorts as $collectionSort){
+                        $sorts[$collectionSort->columnName] = $collectionSort->ascending;
+                    }
 
                     foreach ($this->model->columns as $column) {
                         $classes = $column->getCssClasses();
