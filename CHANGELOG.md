@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.6
+
+Fixed:	Issue with pager showing when unSearchedHtml in play
+
 ### 1.1.5
 
 Fixed:  Table columns weren't applying sorting classes correctly.

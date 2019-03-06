@@ -102,11 +102,13 @@ class TableView extends UrlStateView
         }
 
         //Always print the pager so we get javaScript loading
-        print $this->leaves["EventPager"];
+        $pagerHtml = (string)$this->leaves["EventPager"];
 
         if ($suppressPagerContent) {
             return;
         }
+
+        print $pagerHtml;
 
         ?>
         <div class="list">
