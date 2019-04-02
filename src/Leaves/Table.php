@@ -79,12 +79,19 @@ class Table extends UrlStateLeaf
     public $getAdditionalClientSideRowDataEvent;
 
     /**
+     * @var Event An opportunity for other Leaf objects to listen for updates on the Table
+     */
+    public $collectionModifiedEvent;
+
+    /**
      * @var Model
      */
     private $currentRow;
 
     public function __construct(Collection $list = null, $pageSize = 50, $presenterName = "Table")
     {
+        $this->collectionModifiedEvent = new Event();
+
         parent::__construct($presenterName, function (TableModel $model) use ($list, $pageSize) {
             $model->collection = $list;
             $model->originalCollection = clone $list;
@@ -402,6 +409,7 @@ class Table extends UrlStateLeaf
         $this->getFilterEvent->raise(function (Filter $filter) {
             $this->model->collection->filter($filter);
             $this->model->collectionUpdatedEvent->raise($this->model->collection);
+            $this->collectionModifiedEvent->raise($this->model->collection);
         });
 
         $this->applySort();
@@ -418,6 +426,7 @@ class Table extends UrlStateLeaf
                 $this->getFilterEvent->raise(function (Filter $filter) use ($collection) {
                     $collection->filter($filter);
                     $this->model->collectionUpdatedEvent->raise($this->model->collection);
+                    $this->collectionModifiedEvent->raise($this->model->collection);
                 });
 
                 return $collection;
