@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.8
+
+Fixed:	Issue with temp path
+
 ### 1.1.7
 
 Fixed:	Issue with exportList() not creating the temp folder.
