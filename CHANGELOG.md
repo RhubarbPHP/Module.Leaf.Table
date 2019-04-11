@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.7
+
+Fixed:	Issue with exportList() not creating the temp folder.
+
 ### 1.1.6
 
 Fixed:	Issue with pager showing when unSearchedHtml in play

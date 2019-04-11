@@ -157,7 +157,11 @@ class Table extends UrlStateLeaf
     {
         $this->configureFilters();
 
-        $cachePath = TEMP_DIR . "/cache/";
+        $cachePath = TEMP_DIR . "/exports/";
+
+        if (!file_exists($cachePath)){
+            mkdir($cachePath, 0766, true);
+        }
 
         if (file_exists($cachePath . "export.csv")) {
             unlink($cachePath . "export.csv");
