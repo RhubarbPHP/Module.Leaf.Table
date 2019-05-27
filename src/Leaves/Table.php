@@ -194,7 +194,7 @@ class Table extends UrlStateLeaf
             }
 
             foreach ($columns as $column) {
-                $data[$column->label] = $column->getCellContent($item, $decorator);
+                $data[$column->label] = $column->getCellContent($item, $decorator, false);
             }
 
             $stream->appendItem($data);
