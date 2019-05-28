@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.9
+
+Fixed:	On export of data from table, decode any special characters.
+
 ### 1.1.8
 
 Fixed:	Issue with temp path
