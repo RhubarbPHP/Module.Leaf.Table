@@ -128,7 +128,7 @@ class TableView extends UrlStateView
                     foreach ($this->model->columns as $column) {
                         $classes = $column->getCssClasses();
 
-                        if ($column instanceof SortableColumn) {
+                        if ($column instanceof SortableColumn && $column->sortable) {
                             $classes[] = "sortable";
 
                             if (isset($sorts[$column->getSortableColumnName()])) {

@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.10
+
+Fixed:  Able to prevent columns from being sorted 
+
 ### 1.1.9
 
 Fixed:	On export of data from table, decode any special characters.
