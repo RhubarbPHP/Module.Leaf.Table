@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.11
+
+Fixed:	Issue with temp path being created with wrong permissions
+
 ### 1.1.10
 
 Fixed:  Able to prevent columns from being sorted 

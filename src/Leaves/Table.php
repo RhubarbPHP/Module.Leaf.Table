@@ -160,7 +160,7 @@ class Table extends UrlStateLeaf
         $cachePath = rtrim(TEMP_DIR, '/'). "/exports/";
 
         if (!file_exists($cachePath)){
-            mkdir($cachePath, 0766, true);
+            mkdir($cachePath, 0776, true);
         }
 
         if (file_exists($cachePath . "export.csv")) {
