@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.12
+
+Fixed:	Issue with double pagers not always triggering via XHR
+
 ### 1.1.11
 
 Fixed:	Issue with temp path being created with wrong permissions
