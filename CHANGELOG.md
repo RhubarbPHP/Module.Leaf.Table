@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.13
+
+Fixed:  Issue with broken sorting if columns are not initialize
+
 ### 1.1.12
 
 Fixed:	Issue with double pagers not always triggering via XHR

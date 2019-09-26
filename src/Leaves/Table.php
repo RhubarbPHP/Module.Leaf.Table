@@ -515,11 +515,13 @@ class Table extends UrlStateLeaf
                 return;
             }
 
-            $column = $this->inflateColumns($this->columns)[(int)$sort];
-            if ($column instanceof SortableColumn) {
-                // Change the sort order.
-                $this->model->sortColumn = $column->getSortableColumnName();
-                $this->model->sortDirection = $asc;
+            if(isset($this->columns[(int)$sort])) {
+                $column = $this->inflateColumns($this->columns)[(int)$sort];
+                if ($column instanceof SortableColumn) {
+                    // Change the sort order.
+                    $this->model->sortColumn = $column->getSortableColumnName();
+                    $this->model->sortDirection = $asc;
+                }
             }
         }
     }
