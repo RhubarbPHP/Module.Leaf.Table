@@ -479,7 +479,10 @@ class Table extends UrlStateLeaf
     {
         parent::beforeRender();
 
-        $this->model->columns = $this->inflateColumns($this->columns);
+        if (!$this->model->unsearchedHtml || $this->model->searched) {
+            $this->model->columns = $this->inflateColumns($this->columns);
+        }
+        
         $this->configureFilters();
     }
 

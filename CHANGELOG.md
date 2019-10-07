@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.15
+
+Fixed:  Fix for 1.1.14... 
+
 ### 1.1.14
 
 Fixed:  Better support for not causing DB load if using unsearched html
