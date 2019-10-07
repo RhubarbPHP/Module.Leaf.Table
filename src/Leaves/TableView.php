@@ -95,22 +95,15 @@ class TableView extends UrlStateView
 
         if ($this->model->unsearchedHtml && !$this->model->searched) {
             print $this->model->unsearchedHtml;
-            $suppressPagerContent = true;
+            $this->leaves["EventPager"]->deploy('top');
+            return;
         } elseif (count($this->model->collection) == 0 && $this->model->noDataHtml) {
             print $this->model->noDataHtml;
-            $suppressPagerContent = true;
-        }
-
-        //Always print the pager so we get javaScript loading
-        ob_start();
-        $this->leaves["EventPager"]->printWithIndex('top');
-        $pagerHtml = ob_get_clean();
-
-        if ($suppressPagerContent) {
+            $this->leaves["EventPager"]->deploy('top');
             return;
         }
 
-        print $pagerHtml;
+        $this->leaves["EventPager"]->printWithIndex('top');
 
         ?>
         <div class="list">

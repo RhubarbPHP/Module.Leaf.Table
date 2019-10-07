@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.14
+
+Fixed:  Better support for not causing DB load if using unsearched html
+
 ### 1.1.13
 
 Fixed:  Issue with broken sorting if columns are not initialize
