@@ -238,8 +238,15 @@ class Table extends UrlStateLeaf
     private function getSchemaColumns()
     {
         // Make sure the collection has been fetched otherwise pull up schema details won't be
-        // available.
-        $this->model->collection->count();
+        // available. We don't however do this if we are using unSearchedHtml. That is used when
+        // we have a slow table that we don't want to show the initial view of until the user searches.
+        // Because this always runs before search filters are applied we end up running the default
+        // collection query before we run the filered one, causing the very slow down we were trying
+        // to avoid.
+
+        if (!$this->model->unsearchedHtml) {
+            $this->model->collection->count();
+        }
 
         if (!$this->schemaColumns) {
             $schema = $this->model->collection->getModelSchema();

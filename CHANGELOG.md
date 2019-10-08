@@ -1,5 +1,11 @@
 # Changelog
 
+### 1.1.16
+
+Change: Additional columns are no longer assessed if using unSearchedHtml to improve performance.
+        This is not a great solution - ideally additional columns would not require a DB query to run
+        in order to be evaluated.
+
 ### 1.1.15
 
 Fixed:  Fix for 1.1.14... 
