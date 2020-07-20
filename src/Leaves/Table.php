@@ -39,6 +39,7 @@ use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Decorators\DataDecorator;
 use Rhubarb\Stem\Filters\Filter;
 use Rhubarb\Stem\Models\Model;
+use Rhubarb\Stem\Repositories\MySql\MySql;
 use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlForeignKeyColumn;
 use Rhubarb\Stem\Schema\Relationships\OneToOne;
 use Rhubarb\Stem\Schema\SolutionSchema;
@@ -244,10 +245,12 @@ class Table extends UrlStateLeaf
         // collection query before we run the filered one, causing the very slow down we were trying
         // to avoid.
 
-        if (!$this->model->unsearchedHtml) {
-            $this->model->collection->count();
+        $respository = $this->model->collection->getRepository(); 
+        if ($respository instanceof MySql) {
+            $namedParams = [];
+            $respository->getSqlStatementForCollection($this->model->collection, $namedParams);
         }
-
+        
         if (!$this->schemaColumns) {
             $schema = $this->model->collection->getModelSchema();
             $this->schemaColumns = [];
@@ -428,7 +431,6 @@ class Table extends UrlStateLeaf
                 $collection = clone $this->model->originalCollection;
                 $this->getFilterEvent->raise(function (Filter $filter) use ($collection) {
                     $collection->filter($filter);
-                    $this->model->collectionUpdatedEvent->raise($this->model->collection);
                 });
 
                 return $collection;
