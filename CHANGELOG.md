@@ -1,5 +1,12 @@
 # Changelog
 
+### 1.2.0
+
+Change: A better all round solution to 1.1.16's performance issue resulting in no query execution just
+        statement preparation.
+Change: Potentially breaking change - removed a spurious firing of collectionUpdatedEvent that caused
+        doubling of query execution time in some cases. No observed side effects from this removal.
+
 ### 1.1.16
 
 Change: Additional columns are no longer assessed if using unSearchedHtml to improve performance.
